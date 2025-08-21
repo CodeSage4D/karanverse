@@ -279,6 +279,22 @@
             font-weight: 700;
         }
 
+        .ai-mode-btn {
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #0a192f, #112240);
+            color: var(--brand-2);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ai-mode-btn:hover {
+            box-shadow: 0 0 12px var(--brand-2);
+            color: #fff;
+        }
+
         /* Hero */
         .hero {
             position: relative;
@@ -1497,6 +1513,7 @@
             </div>
             <button id="themeToggle" class="theme-toggle"></button>
             <button id="hamburger" class="hamburger">&#9776;</button>
+            <button class="ai-mode-btn" onclick="toggleAIMode()">🤖 AI Mode</button>
         </div>
     </nav>
 
@@ -1552,26 +1569,22 @@
                                 class="text-xs underline opacity-80 hover:opacity-100">github.com/CodeSage4D</a>
                         </div>
                         <pre
-                            class="text-xs leading-relaxed font-mono overflow-auto max-h-72 p-4 rounded-xl bg-gradient-to-b from-ink-900/80 to-ink-900/60 text-slate-100 border border-white/10">
+  class="text-xs leading-relaxed font-mono whitespace-pre-wrap break-words overflow-auto max-h-72 p-4 rounded-xl bg-gradient-to-b from-ink-900/80 to-ink-900/60 text-slate-100 border border-white/10">
 <span class="opacity-60">// profile.json</span>
 {
-  "name": "Karann Mishra",
-  "pronouns": "he/him",
-  "roles": ["AI/ML Developer","Python Expert","NLP & GPT Integrator","R&D Innovator"],
+  "name": "Karan Mishra",
+  "roles": ["AI/ML Developer", "Python & NLP Specialist"],
   "current": {
     "title": "Founder & CEO",
     "org": "AURXON",
-    "mode": "Hybrid",
-    "since": "Aug 2024"
+    "since": "2024"
   },
-  "education": [
-    {"degree": "B.Tech CS", "org": "Sri Aurobindo Institute of Technology, Indore", "years": "2020–2024"}
-  ],
-  "badges": ["Google Crash Course on Python", "ChatGPT Prompt Engineering", "MSME Python Certification"],
+  "certifications": ["Google Python", "Prompt Engineering", "MSME Python"],
   "location": "Indore, India",
-  "interests": ["NLP", "Deep Learning", "Automation", "Ethical AI"]
+  "focus": ["NLP", "Deep Learning", "AI Automation"]
 }
-            </pre>
+</pre>
+
                         <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <div class="px-3 py-2 rounded-xl border badge text-xs flex items-center gap-2"><span
                                     class="w-2 h-2 bg-emerald-500 rounded-full"></span> AI/ML</div>
@@ -1907,54 +1920,6 @@
         </div>
     </section>
 
-    <!-- <section id="skills">
-        <div class="container">
-            <h2 class="section-title">Skills</h2>
-            <p class="section-sub">Core competencies with animated progress bars for visual impact.</p>
-            <div class="grid">
-                <div class="col-6">
-                    <div class="skill reveal"><strong>Machine Learning Engineering</strong>
-                        <div class="rail" data-amt="90">
-                            <div class="blocks"></div>
-                            <div class="fill"></div>
-                        </div>
-                    </div>
-                    <div class="skill reveal"><strong>Natural Language Processing (NLP)</strong>
-                        <div class="rail" data-amt="88">
-                            <div class="blocks"></div>
-                            <div class="fill"></div>
-                        </div>
-                    </div>
-                    <div class="skill reveal"><strong>Python (Programming Language)</strong>
-                        <div class="rail" data-amt="95">
-                            <div class="blocks"></div>
-                            <div class="fill"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="skill reveal"><strong>Deep Learning</strong>
-                        <div class="rail" data-amt="85">
-                            <div class="blocks"></div>
-                            <div class="fill"></div>
-                        </div>
-                    </div>
-                    <div class="skill reveal"><strong>AI Product Development</strong>
-                        <div class="rail" data-amt="82">
-                            <div class="blocks"></div>
-                            <div class="fill"></div>
-                        </div>
-                    </div>
-                    <div class="skill reveal"><strong>Data Analysis & Visualization</strong>
-                        <div class="rail" data-amt="87">
-                            <div class="blocks"></div>
-                            <div class="fill"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
     <section id="skills">
         <div class="container">
             <h2 class="section-title">Skills</h2>
@@ -2383,6 +2348,77 @@
             window.location.href = mailto;
             showToast('Opening your email client…');
         });
+
+        // AI Mode Integration
+        let aiMode = false;
+        let originalNav = '';
+
+        async function toggleAIMode() {
+            const navLinks = document.getElementById('navLinks');
+            const aiBtn = document.querySelector('.ai-mode-btn');
+
+            if (aiMode) {
+                navLinks.innerHTML = originalNav;
+                aiBtn.textContent = '🤖 AI Mode';
+                aiMode = false;
+            } else {
+                originalNav = navLinks.innerHTML;
+                navLinks.innerHTML = ''; // Clear links
+                aiBtn.textContent = 'Normal Mode';
+                aiMode = true;
+
+                try {
+                    const apiKey = 'YOUR_OPENAI_API_KEY_HERE'; // Replace with your OpenAI API key
+                    if (!apiKey || apiKey === 'YOUR_OPENAI_API_KEY_HERE') throw new Error('No API key provided');
+
+                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-4o-mini', // Or 'gpt-3.5-turbo' for cheaper
+                            messages: [{
+                                role: 'user',
+                                content: 'You are a navigation AI for an AI/ML portfolio site with sections: About, Domains, Projects, Experience, Skills, Contact. Suggest 4 personalized navigation items based on typical user interests in AI/ML portfolios. Format as JSON array of objects with "title" and "href" (use #section for href). Example: [{"title": "About Me", "href": "#about"}]'
+                            }],
+                            temperature: 0.7
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('API request failed');
+
+                    const data = await response.json();
+                    const suggestionsText = data.choices[0].message.content;
+                    const suggestions = JSON.parse(suggestionsText);
+
+                    suggestions.forEach(sug => {
+                        const a = document.createElement('a');
+                        a.href = sug.href;
+                        a.textContent = sug.title;
+                        a.classList.add('shiny');
+                        navLinks.appendChild(a);
+                    });
+                } catch (e) {
+                    console.error('AI Mode Error:', e);
+                    // Fallback static suggestions
+                    const fallback = [
+                        { title: '📖 Resume', href: '#resume' },
+                        { title: '💡 AI Recommendations', href: '#ai' },
+                        { title: '⚡ Quick Contact', href: '#contact' },
+                        { title: '🎨 My Works', href: '#projects' }
+                    ];
+                    fallback.forEach(sug => {
+                        const a = document.createElement('a');
+                        a.href = sug.href;
+                        a.textContent = sug.title;
+                        a.classList.add('shiny');
+                        navLinks.appendChild(a);
+                    });
+                }
+            }
+        }
     </script>
 </body>
 
